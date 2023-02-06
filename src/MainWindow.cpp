@@ -61,6 +61,10 @@ bool MainWindow::render(float DeltaTime)
 	            {
 					ClearBuffer();
 	            }
+				if (ImGui::MenuItem("Save to SVG"))
+				{
+					Controller->SaveToSVG();
+				}
 				int speed = Controller->GetLongParameter(LP_MAX_BITRATE);
 				if(ImGui::SliderInt ("Speed", &speed, 1, 2000))
 				{

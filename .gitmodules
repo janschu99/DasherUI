@@ -16,3 +16,6 @@
 [submodule "Thirdparty/nativefiledialog-extended"]
 	path = Thirdparty/nativefiledialog-extended
 	url = https://github.com/btzy/nativefiledialog-extended.git
+[submodule "Thirdparty/svg"]
+	path = Thirdparty/svg
+	url = https://github.com/vincentlaucsb/svg.git

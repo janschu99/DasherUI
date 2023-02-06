@@ -32,6 +32,7 @@ public:
 	std::shared_ptr<DasherUIScreen> GetScreenModule() { return ScreenModule; }
 	bool SupportsClipboard() override { return true; }
 	void CopyToClipboard(const std::string& text) override;
+	void SaveToSVG() const { ScreenModule->SaveNextImageToSVG(); };
 
 private:
 	//Cursor position in the output buffer

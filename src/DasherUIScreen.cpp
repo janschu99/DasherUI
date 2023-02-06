@@ -20,6 +20,15 @@ void DasherUIScreen::DrawString(Label* label, Dasher::screenint x, Dasher::scree
 	const ImVec4 ImColor = { static_cast<float>(Color.Red) / 255.0f, static_cast<float>(Color.Green) / 255.0f, static_cast<float>(Color.Blue) / 255.0f, 1.0f };
 	const ImVec2 Pos = { static_cast<float>(x),static_cast<float>(y)};
 	ImGui::GetWindowDrawList()->AddText(Font, static_cast<float>(iFontSize), Pos + CanvasPos, ImGui::ColorConvertFloat4ToU32(ImColor), label->m_strText.c_str());
+
+	if(SaveNextToSVG)
+	{
+		SVGDocument->add_child<SVG::Text>(Pos.x, Pos.y, label->m_strText)
+			->set_attr("fill", "rgb(" + std::to_string(Color.Red) + "," + std::to_string(Color.Green) + "," + std::to_string(Color.Blue) + ")")
+			.set_attr("font-size", iFontSize)
+			.set_attr("font-family", "Arial, Helvetica, sans-serif")
+			.set_attr("dominant-baseline", "hanging");
+	}
 }
 
 void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, Dasher::screenint x2, Dasher::screenint y2, int Colour, int iOutlineColour, int iThickness)
@@ -38,6 +47,15 @@ void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, D
 
 		ImGui::GetWindowDrawList()->AddRect(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImOutlineColor),0,0, static_cast<float>(iThickness));
 	}
+
+	if (SaveNextToSVG)
+	{
+		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[Colour];
+		SVGDocument->add_child<SVG::Rect>(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y)
+			->set_attr("fill", "rgb(" + std::to_string(FillColor.Red) + "," + std::to_string(FillColor.Green) + "," + std::to_string(FillColor.Blue) + ")")
+			.set_attr("stroke", "rgb(" + std::to_string(OutlineColor.Red) + "," + std::to_string(OutlineColor.Green) + "," + std::to_string(OutlineColor.Blue) + ")")
+			.set_attr("stroke-width", iThickness);
+	}
 }
 
 void DasherUIScreen::DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Dasher::screenint iR, int iFillColour, int iLineColour, int iLineWidth)
@@ -54,6 +72,15 @@ void DasherUIScreen::DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Da
 
 		ImGui::GetWindowDrawList()->AddCircle(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor),0, static_cast<float>(iLineWidth));
 	}
+
+	if (SaveNextToSVG)
+	{
+		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iLineColour];
+		SVGDocument->add_child<SVG::Circle>(iCX, iCY, iR)
+			->set_attr("fill", "rgb(" + std::to_string(FillColor.Red) + "," + std::to_string(FillColor.Green) + "," + std::to_string(FillColor.Blue) + ")")
+			.set_attr("stroke", "rgb(" + std::to_string(OutlineColor.Red) + "," + std::to_string(OutlineColor.Green) + "," + std::to_string(OutlineColor.Blue) + ")")
+			.set_attr("stroke-width", iLineWidth);
+	}
 }
 
 void DasherUIScreen::Polyline(point* Points, int Number, int iWidth, int Colour)
@@ -69,6 +96,20 @@ void DasherUIScreen::Polyline(point* Points, int Number, int iWidth, int Colour)
 	}
 
 	ImGui::GetWindowDrawList()->AddPolyline(points.data(), Number, ImGui::ColorConvertFloat4ToU32(ImLineColor), 0, static_cast<float>(iWidth));
+
+	if (SaveNextToSVG && Number >= 2)
+	{
+		const auto Polyline = SVGDocument->add_child<SVG::Path>();
+
+		Polyline->start(Points[0].x, Points[0].y);
+		for (unsigned int i = 1; i < Number; i++)
+		{
+			Polyline->line_to(Points[i].x, Points[i].y);
+		}
+		
+		Polyline->set_attr("stroke", "rgb(" + std::to_string(LineColor.Red) + "," + std::to_string(LineColor.Green) + "," + std::to_string(LineColor.Blue) + ")");
+		Polyline->set_attr("stroke-width", iWidth);
+	}
 }
 
 void DasherUIScreen::Polygon(point* Points, int Number, int fillColour, int outlineColour, int lineWidth)
@@ -85,13 +126,40 @@ void DasherUIScreen::Polygon(point* Points, int Number, int fillColour, int outl
 
 	ImGui::GetWindowDrawList()->AddConvexPolyFilled(points.data(), Number, ImGui::ColorConvertFloat4ToU32(ImFillColor));
 
-	if(lineWidth > 0)
+	if(lineWidth > 0 && !SaveNextToSVG)
 	{
 		Polyline(Points, Number, lineWidth, outlineColour);
 	}
+
+	if (SaveNextToSVG)
+	{
+		std::vector<SVG::Point> points;
+		const Dasher::CColourIO::ColourInfo::PaletteColor LineColor = this->pColorScheme->Colors[outlineColour];
+
+		for (unsigned int i = 0; i < Number; i++)
+		{
+			points.push_back(SVG::Point(static_cast<double>(Points[i].x), static_cast<double>(Points[i].y)));
+		}
+
+		auto Polygon = SVGDocument->add_child<SVG::Polygon>(points);
+		Polygon->set_attr("fill", "rgb(" + std::to_string(FillColor.Red) + "," + std::to_string(FillColor.Green) + "," + std::to_string(FillColor.Blue) + ")");
+		Polygon->set_attr("stroke", "rgb(" + std::to_string(LineColor.Red) + "," + std::to_string(LineColor.Green) + "," + std::to_string(LineColor.Blue) + ")");
+		Polygon->set_attr("stroke-width", lineWidth);
+	}
 }
 
-void DasherUIScreen::Display(){}
+void DasherUIScreen::Display()
+{
+	if(SaveNextToSVG)
+	{
+		SVGDocument->autoscale();
+		std::ofstream outfile("DasherView.svg");
+		outfile << std::string(*SVGDocument);
+		SaveNextToSVG = false;
+		SVGDocument.reset();
+	}
+
+}
 
 void DasherUIScreen::SetColourScheme(const Dasher::CColourIO::ColourInfo* pColourScheme)
 {

@@ -4,6 +4,7 @@
 
 #include "DasherInput.h"
 #include "imgui.h"
+#include "svg/src/svg.hpp"
 
 class DasherUIScreen : public Dasher::CDasherScreen, public Dasher::CScreenCoordInput
 {
@@ -26,10 +27,18 @@ public:
 
 	bool GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView) override;
 
+	void SaveNextImageToSVG()
+	{
+		SVGDocument = std::make_unique<SVG::SVG>();
+		SaveNextToSVG = true;
+	};
+
 private:
 	const Dasher::CColourIO::ColourInfo* pColorScheme;
 	ImVec2 CanvasPos;
 	ImVec2 CanvasSize;
 
 	ImFont* Font;
+	bool SaveNextToSVG = false;
+	std::unique_ptr<SVG::SVG> SVGDocument;
 };
