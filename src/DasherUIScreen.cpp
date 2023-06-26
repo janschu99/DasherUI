@@ -10,8 +10,8 @@ DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordIn
 
 std::pair<Dasher::screenint, Dasher::screenint> DasherUIScreen::TextSize(Label* Label, unsigned iFontSize)
 {
-	const ImVec2 Size = Font->CalcTextSizeA(iFontSize, FLT_MAX, -1, Label->m_strText.c_str());
-	return {Size.x, Size.y};
+	const ImVec2 Size = Font->CalcTextSizeA(static_cast<float>(iFontSize), FLT_MAX, -1, Label->m_strText.c_str());
+	return {static_cast<Dasher::screenint>(Size.x), static_cast<Dasher::screenint>(Size.y)};
 }
 
 void DasherUIScreen::DrawString(Label* label, Dasher::screenint x, Dasher::screenint y, unsigned iFontSize, int iColour)

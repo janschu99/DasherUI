@@ -17,7 +17,7 @@ MainWindow::MainWindow()
 	Controller = make_unique<DasherController>(Settings.get());
 	Controller->Initialize();
 
-	Controller->GetPermittedValues(SP_ALPHABET_ID, Alphabets);
+	Controller->GetPermittedValues(Dasher::SP_ALPHABET_ID, Alphabets);
 
 }
 
@@ -61,16 +61,16 @@ bool MainWindow::render(float DeltaTime)
 	            {
 					ClearBuffer();
 	            }
-				int speed = Controller->GetLongParameter(LP_MAX_BITRATE);
+				int speed = Controller->GetLongParameter(Dasher::LP_MAX_BITRATE);
 				if(ImGui::SliderInt ("Speed", &speed, 1, 2000))
 				{
-					Controller->SetLongParameter(LP_MAX_BITRATE, speed);
+					Controller->SetLongParameter(Dasher::LP_MAX_BITRATE, speed);
 				}
 
 				static int item_current = 0;
 				if(ImGui::Combo("Alphabet", &item_current, [](void* data, int idx, const char** out_text) { *out_text = static_cast<const std::vector<std::string>*>(data)->at(idx).c_str(); return true; }, (void*)&Alphabets, static_cast<int>(Alphabets.size()), 10))
 				{
-					Controller->SetStringParameter(SP_ALPHABET_ID, Alphabets[item_current]);
+					Controller->SetStringParameter(Dasher::SP_ALPHABET_ID, Alphabets[item_current]);
 				}
 
 	            ImGui::EndMenu();
@@ -117,7 +117,7 @@ bool MainWindow::render(float DeltaTime)
 			ImGui::ColorConvertFloat4ToU32({0,1,0,1})
 		);
 
-		Controller->Render(DeltaTime * 1000.0f, canvasPos, canvasSize); //convert to millis
+		Controller->Render(static_cast<long>(DeltaTime * 1000.0f), canvasPos, canvasSize); //convert to millis
 
 		ImGui::PopClipRect();
     }
