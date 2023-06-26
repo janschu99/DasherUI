@@ -10,11 +10,11 @@ MainWindow::MainWindow()
 {
 	ImGui::SetCurrentFont(LoadFonts(14.0f));
 
-	Settings = make_unique<Dasher::XmlSettingsStore>("Settings.xml", this);
+	Settings = std::make_unique<Dasher::XmlSettingsStore>("Settings.xml", this);
 	Settings->Load();
 	Settings->Save();
 
-	Controller = make_unique<DasherController>(Settings.get());
+	Controller = std::make_unique<DasherController>(Settings.get());
 	Controller->Initialize();
 
 	Controller->GetPermittedValues(Dasher::SP_ALPHABET_ID, Alphabets);

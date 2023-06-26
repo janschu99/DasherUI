@@ -4,7 +4,7 @@ class XmlServerStore;
 
 DasherController::DasherController(Dasher::CSettingsStore* pSettingsStore): CDashIntfScreenMsgs(pSettingsStore)
 {
-	ScreenModule = make_shared<DasherUIScreen>();
+	ScreenModule = std::make_shared<DasherUIScreen>();
 	CDashIntfScreenMsgs::ChangeScreen(ScreenModule.get());
 }
 
