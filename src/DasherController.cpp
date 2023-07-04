@@ -110,11 +110,11 @@ void DasherController::Render(long deltaTime, ImVec2 canvasPos, ImVec2 canvasSiz
 	//Handle Input
 	if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsMouseHoveringRect(canvasPos, canvasPos + canvasSize))
 	{
-		KeyDown(Time, 100); //100 is the keycode for LMB
+		KeyDown(Time, Dasher::Keys::Primary_Input); //100 is the keycode for LMB
 	}
 
 	if(ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 	{
-		KeyUp(Time, 100); //100 is the keycode for LMB
+		KeyUp(Time, Dasher::Keys::Primary_Input); //100 is the keycode for LMB
 	}
 }
