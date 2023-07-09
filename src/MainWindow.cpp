@@ -9,6 +9,7 @@
 MainWindow::MainWindow()
 {
 	ImGui::SetCurrentFont(LoadFonts(14.0f));
+	ImGui::SetNextFrameWantCaptureKeyboard(true);
 
 	Settings = make_unique<Dasher::XmlSettingsStore>("Settings.xml", this);
 	Settings->Load();
@@ -65,6 +66,17 @@ bool MainWindow::render(float DeltaTime)
 				{
 					Controller->SaveToSVG();
 				}
+				static bool save_svg_pressed = false;
+				if(ImGui::IsKeyPressed(ImGuiKey_ModCtrl) && ImGui::IsKeyPressed(ImGuiKey_S) && !save_svg_pressed)
+				{
+					Controller->SaveToSVG();
+					save_svg_pressed = true;
+				}
+				else
+				{
+					save_svg_pressed = false;
+				}
+
 				int speed = Controller->GetLongParameter(LP_MAX_BITRATE);
 				if(ImGui::SliderInt ("Speed", &speed, 1, 2000))
 				{
