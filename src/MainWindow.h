@@ -14,6 +14,7 @@ public:
 	MainWindow();
 	~MainWindow() = default;
 
+	void HandleInput(const std::unique_ptr<DasherController>& controller, long time);
 	bool render(float DeltaTime);
 
 	void CopyTextToClipboard(const std::string& text) const;

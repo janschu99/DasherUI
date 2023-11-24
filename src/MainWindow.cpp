@@ -10,16 +10,55 @@ MainWindow::MainWindow()
 {
 	ImGui::SetCurrentFont(LoadFonts(14.0f));
 
-	Settings = make_unique<Dasher::XmlSettingsStore>("Settings.xml", this);
+	Settings = std::make_unique<Dasher::XmlSettingsStore>("Settings.xml", this);
 	Settings->Load();
 	Settings->Save();
 
-	Controller = make_unique<DasherController>(Settings.get());
+	Controller = std::make_unique<DasherController>(Settings.get());
 	Controller->Initialize();
 
-	Controller->GetPermittedValues(SP_ALPHABET_ID, Alphabets);
+	Controller->GetPermittedValues(Dasher::SP_ALPHABET_ID, Alphabets);
 
 }
+
+#define FORWARD_KEY(ImGui_Key, DasherKey) { \
+	if(ImGui::IsKeyPressed(ImGui_Key, false)) Controller->KeyDown(time, DasherKey); \
+	if(ImGui::IsKeyReleased(ImGui_Key, false)) Controller->KeyUp(time, DasherKey); \
+}
+void MainWindow::HandleInput(const std::unique_ptr<DasherController>& controller, long time)
+{
+	// Space
+	FORWARD_KEY(ImGuiKey_Space, Dasher::Keys::Big_Start_Stop_Key)
+
+	// Button 1
+	FORWARD_KEY(ImGuiKey_LeftArrow, Dasher::Keys::Button_1)
+	FORWARD_KEY(ImGuiKey_Keypad4, Dasher::Keys::Button_1)
+	FORWARD_KEY(ImGuiKey_A, Dasher::Keys::Button_1)
+	FORWARD_KEY(ImGuiKey_J, Dasher::Keys::Button_1)
+	FORWARD_KEY(ImGuiKey_1, Dasher::Keys::Button_1)
+
+	// Button 2
+	FORWARD_KEY(ImGuiKey_UpArrow, Dasher::Keys::Button_2)
+	FORWARD_KEY(ImGuiKey_Keypad8, Dasher::Keys::Button_2)
+	FORWARD_KEY(ImGuiKey_W, Dasher::Keys::Button_2)
+	FORWARD_KEY(ImGuiKey_I, Dasher::Keys::Button_2)
+	FORWARD_KEY(ImGuiKey_2, Dasher::Keys::Button_2)
+
+	// Button 3
+	FORWARD_KEY(ImGuiKey_RightArrow, Dasher::Keys::Button_3)
+	FORWARD_KEY(ImGuiKey_Keypad6, Dasher::Keys::Button_3)
+	FORWARD_KEY(ImGuiKey_S, Dasher::Keys::Button_3)
+	FORWARD_KEY(ImGuiKey_K, Dasher::Keys::Button_3)
+	FORWARD_KEY(ImGuiKey_3, Dasher::Keys::Button_3)
+
+	// Button 4
+	FORWARD_KEY(ImGuiKey_DownArrow, Dasher::Keys::Button_4)
+	FORWARD_KEY(ImGuiKey_Keypad2, Dasher::Keys::Button_4)
+	FORWARD_KEY(ImGuiKey_Z, Dasher::Keys::Button_4)
+	FORWARD_KEY(ImGuiKey_M, Dasher::Keys::Button_4)
+	FORWARD_KEY(ImGuiKey_4, Dasher::Keys::Button_4)
+}
+#undef FORWARD_KEY
 
 bool MainWindow::render(float DeltaTime)
 {
@@ -29,7 +68,7 @@ bool MainWindow::render(float DeltaTime)
 	const ImVec2 spacing = ImGui::GetStyle().ItemSpacing;
     ImGui::SetNextWindowPos(viewport->WorkPos);
     ImGui::SetNextWindowSize(viewport->WorkSize);
-
+	
     if (ImGui::Begin("MainWindow", nullptr, flags))
     {
 	    if(ImGui::BeginMainMenuBar())
@@ -61,16 +100,16 @@ bool MainWindow::render(float DeltaTime)
 	            {
 					ClearBuffer();
 	            }
-				int speed = Controller->GetLongParameter(LP_MAX_BITRATE);
+				int speed = Controller->GetLongParameter(Dasher::LP_MAX_BITRATE);
 				if(ImGui::SliderInt ("Speed", &speed, 1, 2000))
 				{
-					Controller->SetLongParameter(LP_MAX_BITRATE, speed);
+					Controller->SetLongParameter(Dasher::LP_MAX_BITRATE, speed);
 				}
 
 				static int item_current = 0;
 				if(ImGui::Combo("Alphabet", &item_current, [](void* data, int idx, const char** out_text) { *out_text = static_cast<const std::vector<std::string>*>(data)->at(idx).c_str(); return true; }, (void*)&Alphabets, static_cast<int>(Alphabets.size()), 10))
 				{
-					Controller->SetStringParameter(SP_ALPHABET_ID, Alphabets[item_current]);
+					Controller->SetStringParameter(Dasher::SP_ALPHABET_ID, Alphabets[item_current]);
 				}
 
 	            ImGui::EndMenu();
@@ -105,7 +144,7 @@ bool MainWindow::render(float DeltaTime)
 			}
 		ImGui::EndGroup();
 
-	    const ImVec2 canvasPos = ImGui::GetCursorScreenPos();
+		const ImVec2 canvasPos = ImGui::GetCursorScreenPos();
 	    const ImVec2 canvasSize = ImGui::GetContentRegionAvail();
 
 		ImGui::PushClipRect(canvasPos, canvasPos + canvasSize, false);
@@ -117,9 +156,11 @@ bool MainWindow::render(float DeltaTime)
 			ImGui::ColorConvertFloat4ToU32({0,1,0,1})
 		);
 
-		Controller->Render(DeltaTime * 1000.0f, canvasPos, canvasSize); //convert to millis
+		Controller->Render(static_cast<long>(DeltaTime * 1000.0f), canvasPos, canvasSize); //convert to millis
 
 		ImGui::PopClipRect();
+
+		HandleInput(Controller, static_cast<long>(DeltaTime * 1000.0f));
     }
     ImGui::End();
 
