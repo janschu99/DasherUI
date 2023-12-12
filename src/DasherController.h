@@ -4,6 +4,7 @@
 #include "DasherUIScreen.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include <memory>
 
 
 class DasherController : public Dasher::CDashIntfScreenMsgs
