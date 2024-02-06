@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <DasherScreen.h>
 
 #include "DasherInput.h"
@@ -30,6 +31,10 @@ private:
 	const Dasher::CColourIO::ColourInfo* pColorScheme;
 	ImVec2 CanvasPos;
 	ImVec2 CanvasSize;
+
+	float SmoothedPositionX = -1.0f;
+	float SmoothedPositionY = -1.0f;
+	const float SmoothingFactor = 0.05f;
 
 	ImFont* Font;
 };

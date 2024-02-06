@@ -120,7 +120,17 @@ bool DasherUIScreen::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& i
 {
 	const ImVec2 MousePos = ImGui::GetMousePos();
 	if (MousePos.x < 0 || MousePos.y < 0) return false;
-	iX = static_cast<Dasher::screenint>(MousePos.x - CanvasPos.x);
-	iY = static_cast<Dasher::screenint>(MousePos.y - CanvasPos.y);
+
+	const float newX = MousePos.x - CanvasPos.x;
+	const float newY = MousePos.y - CanvasPos.y;
+
+	const float smoothing = (SmoothedPositionX < 0) ? 1.0f : SmoothingFactor;
+
+	SmoothedPositionX = smoothing * newX + (1.0f - smoothing) * SmoothedPositionX;
+	SmoothedPositionY = smoothing * newY + (1.0f - smoothing) * SmoothedPositionY;
+
+	iX = static_cast<Dasher::screenint>(SmoothedPositionX);
+	iY = static_cast<Dasher::screenint>(SmoothedPositionY);
+
 	return true;
 }
