@@ -35,14 +35,21 @@ void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, D
 {
 	const Dasher::CColourIO::ColourInfo::PaletteColor FillColor = this->pColorScheme->Colors[Colour];
 	const ImVec4 ImFillColor = { static_cast<float>(FillColor.Red) / 255.0f, static_cast<float>(FillColor.Green) / 255.0f, static_cast<float>(FillColor.Blue) / 255.0f, 1.0f };
-	const ImVec2 p1 = { static_cast<float>(x1), static_cast<float>(y1)};
-	const ImVec2 p2 = { static_cast<float>(x2), static_cast<float>(y2)};
+	ImVec2 p1 = { static_cast<float>(x1), static_cast<float>(y1)};
+	ImVec2 p2 = { static_cast<float>(x2), static_cast<float>(y2)};
+
+	if(iThickness && Colour == 99)
+	{
+		float t =static_cast<float>(iThickness/2.0f);
+		p1 = {static_cast<float>(x1) + t, static_cast<float>(y1) + t};
+		p2 = {static_cast<float>(x2) - t, static_cast<float>(y2) - t};
+	}
 
 	ImGui::GetWindowDrawList()->AddRectFilled(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImFillColor));
 
-	if(iThickness > 0)
+	if(iThickness > 0 && !(Colour == 99 || Colour == 96))
 	{
-		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[Colour];
+		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iOutlineColour == -1 ? 3 : iOutlineColour];
 		const ImVec4 ImOutlineColor = { static_cast<float>(OutlineColor.Red) / 255.0f, static_cast<float>(OutlineColor.Green) / 255.0f, static_cast<float>(OutlineColor.Blue) / 255.0f, 1.0f };
 
 		ImGui::GetWindowDrawList()->AddRect(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImOutlineColor),0,0, static_cast<float>(iThickness));
@@ -50,11 +57,12 @@ void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, D
 
 	if (SaveNextToSVG)
 	{
-		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[Colour];
+		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iOutlineColour == -1 ? 3 : iOutlineColour];
 		SVGDocument->add_child<SVG::Rect>(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y)
 			->set_attr("fill", "rgb(" + std::to_string(FillColor.Red) + "," + std::to_string(FillColor.Green) + "," + std::to_string(FillColor.Blue) + ")")
 			.set_attr("stroke", "rgb(" + std::to_string(OutlineColor.Red) + "," + std::to_string(OutlineColor.Green) + "," + std::to_string(OutlineColor.Blue) + ")")
-			.set_attr("stroke-width", iThickness);
+			.set_attr("stroke-width", (Colour == 99 || Colour == 96) ? 0 : iThickness)
+			.set_attr("fill-opacity", (Colour == 99 || Colour == 96) ? 108.0f/255.0f : 1.0f);
 	}
 }
 
