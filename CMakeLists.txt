@@ -73,6 +73,11 @@ add_dependencies(DasherUI imgui glfw DasherCore)
 target_link_libraries(DasherUI PRIVATE imgui glfw OpenGL::GL DasherCore nfd)
 
 ###############################
+# Third Party Includes
+###############################
+target_include_directories(DasherUI PRIVATE ${PROJECT_SOURCE_DIR}/Thirdparty/asio/asio/include/)
+
+###############################
 # Setting up deloyment
 ###############################
 
