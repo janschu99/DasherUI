@@ -16,7 +16,6 @@ public:
     void startListen();
     void stopListen();
 
-    bool GetSettings(SModuleSettings** sets, int* iCount) override;
 private:
     bool relativeMode;
 	double lastRelativeX = 0.5;

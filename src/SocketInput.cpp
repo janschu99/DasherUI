@@ -97,7 +97,7 @@ void SocketInput::stopListen()
 {
 	keepListenServerAlive = false;
 	keepReadThreadAlive = false;
-	session_acceptor->close();
-	open_socket->close();
-	receiveThread.join();
+	if(session_acceptor) session_acceptor->close();
+	if(open_socket) open_socket->close();
+	if(receiveThread.joinable()) receiveThread.join();
 }

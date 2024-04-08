@@ -33,7 +33,7 @@ void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, D
 
 	if(iThickness > 0)
 	{
-		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[Colour];
+		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iOutlineColour > 0 ? iOutlineColour : 3]; //Apparently Outline Color 3 is the default
 		const ImVec4 ImOutlineColor = { static_cast<float>(OutlineColor.Red) / 255.0f, static_cast<float>(OutlineColor.Green) / 255.0f, static_cast<float>(OutlineColor.Blue) / 255.0f, 1.0f };
 
 		ImGui::GetWindowDrawList()->AddRect(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImOutlineColor),0,0, static_cast<float>(iThickness));
@@ -49,7 +49,7 @@ void DasherUIScreen::DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Da
 
 	if (iLineWidth > 0)
 	{
-		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iLineColour];
+		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iLineColour > 0 ? iLineColour : 3];
 		const ImVec4 ImOutlineColor = { static_cast<float>(OutlineColor.Red) / 255.0f, static_cast<float>(OutlineColor.Green) / 255.0f, static_cast<float>(OutlineColor.Blue) / 255.0f, 1.0f };
 
 		ImGui::GetWindowDrawList()->AddCircle(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor),0, static_cast<float>(iLineWidth));

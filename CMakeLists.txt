@@ -58,7 +58,11 @@ add_subdirectory("Thirdparty/nativefiledialog-extended")
 # DasherUI
 ###############################
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+IF (WIN32)
+	# Hide console window
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+ENDIF()
+
 ADD_Executable(DasherUI
 	${PROJECT_SOURCE_DIR}/src/DasherController.cpp
 	${PROJECT_SOURCE_DIR}/src/DasherController.h

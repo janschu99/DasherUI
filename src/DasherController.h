@@ -4,6 +4,8 @@
 #include "DasherUIScreen.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include <memory>
+
 #include "SocketInput.h"
 
 
