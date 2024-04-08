@@ -4,6 +4,7 @@
 #include "DasherUIScreen.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "SocketInput.h"
 
 
 class DasherController : public Dasher::CDashIntfScreenMsgs
@@ -43,4 +44,5 @@ private:
 
 	//Modules
 	std::shared_ptr<DasherUIScreen> ScreenModule;
+	std::shared_ptr<SocketInput> SocketInputModule;
 };
