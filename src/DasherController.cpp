@@ -94,6 +94,7 @@ void DasherController::CreateModules()
 
 	SocketInputModule = std::make_shared<SocketInput>(static_cast<CSettingsUser*>(this), this, m_pFramerate);
 	RegisterModule(static_cast<Dasher::CInputFilter*>(SocketInputModule.get()));
+	RegisterModule(static_cast<Dasher::CDasherInput*>(SocketInputModule.get()));
 	SocketInputModule->startListen();
 
 	SetDefaultInputDevice(SocketInputModule.get());

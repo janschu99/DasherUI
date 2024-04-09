@@ -18,10 +18,8 @@ public:
 
 private:
     bool relativeMode;
-	double lastRelativeX = 0.5;
-	double lastRelativeY = 0.5;
-    Dasher::screenint lastX = 0;
-    Dasher::screenint lastY = 0;
+	double lastRelativeX = 0.0;
+	double lastRelativeY = 0.0;
 
     //Commands
     std::string xLabel;
