@@ -6,6 +6,7 @@
 #include "imgui_internal.h"
 #include <memory>
 
+#include "OSOutput.h"
 #include "SocketInput.h"
 
 
@@ -47,4 +48,5 @@ private:
 	//Modules
 	std::shared_ptr<DasherUIScreen> ScreenModule;
 	std::shared_ptr<SocketInput> SocketInputModule;
+	std::shared_ptr<OSOutput> OSOutputModule;
 };

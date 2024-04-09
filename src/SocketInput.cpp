@@ -6,11 +6,11 @@
 #include "DasherInterfaceBase.h"
 #include "DasherModel.h"
 
-SocketInput::SocketInput(CSettingsUser* Creator, Dasher::CDashIntfSettings* Controller, Dasher::CFrameRate* pFramerate): CScreenCoordInput(0, _("Socket Input")),
+SocketInput::SocketInput(CSettingsUser* Creator, Dasher::CDasherInterfaceBase* Controller, Dasher::CFrameRate* pFramerate): CScreenCoordInput(0, _("Socket Input")),
                                                                                                                          CDefaultFilter(Creator, Controller, pFramerate, 2, "Socket Mode")
 {
-    xLabel = Controller->GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_X_LABEL);
-    yLabel = Controller->GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_Y_LABEL);
+    xLabel = GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_X_LABEL);
+    yLabel = GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_Y_LABEL);
 }
 
 SocketInput::~SocketInput()
@@ -22,7 +22,7 @@ bool SocketInput::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, 
 {
 	const Dasher::CDasherView::ScreenRegion screenRegion = pView->VisibleRegion();
 
-	const double vectorLength = std::min(Dasher::CDasherModel::ORIGIN_Y - screenRegion.minY, screenRegion.maxY - Dasher::CDasherModel::ORIGIN_Y);
+	const double vectorLength = static_cast<double>(std::min(Dasher::CDasherModel::ORIGIN_Y - screenRegion.minY, screenRegion.maxY - Dasher::CDasherModel::ORIGIN_Y));
 	const double normalization = sqrt(lastRelativeX * lastRelativeX + lastRelativeY * lastRelativeY);
 
 	pView->Dasher2Screen(
@@ -35,7 +35,7 @@ bool SocketInput::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, 
 
 void SocketInput::startListen()
 {
-	session_acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), static_cast<short>(Controller->GetLongParameter(Dasher::LP_SOCKET_PORT))));
+	session_acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), static_cast<short>(GetLongParameter(Dasher::LP_SOCKET_PORT))));
 
 	receiveThread = std::thread([this](){
 
@@ -80,7 +80,7 @@ void SocketInput::startListen()
 						       stop();
 							}
 						}
-					} catch (std::exception& e)
+					} catch (std::exception&)
 					{
                         std::cout << "Wrong format for socket input" << std::endl;
 					}

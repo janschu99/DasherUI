@@ -8,7 +8,7 @@
 class SocketInput : public Dasher::CScreenCoordInput, public Dasher::CDefaultFilter
 {
 public:
-    SocketInput(CSettingsUser* Creator, Dasher::CDashIntfSettings* Controller, Dasher::CFrameRate* pFramerate);
+    SocketInput(CSettingsUser* Creator, Dasher::CDasherInterfaceBase* Controller, Dasher::CFrameRate* pFramerate);
     virtual ~SocketInput();
 
 	bool GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView) override;
@@ -22,9 +22,6 @@ private:
 	double lastRelativeY = 0.5;
     Dasher::screenint lastX = 0;
     Dasher::screenint lastY = 0;
-
-    //Dasher Stuff
-    Dasher::CDashIntfSettings* Controller;
 
     //Commands
     std::string xLabel;

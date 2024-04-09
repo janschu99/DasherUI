@@ -6,6 +6,8 @@ DasherController::DasherController(Dasher::CSettingsStore* pSettingsStore): CDas
 {
 	ScreenModule = std::make_shared<DasherUIScreen>();
 	CDashIntfScreenMsgs::ChangeScreen(ScreenModule.get());
+
+	OSOutputModule = std::make_unique<OSOutput>();
 }
 
 void DasherController::editOutput(const std::string& strText, Dasher::CDasherNode* pNode) {
@@ -15,6 +17,7 @@ void DasherController::editOutput(const std::string& strText, Dasher::CDasherNod
 	}
 	Buffer.append(strText);
 	Cursor += static_cast<unsigned int>(strText.length());
+	OSOutputModule->outputCharacter(strText);
 	CDasherInterfaceBase::editOutput(strText, pNode);
 }
 
@@ -22,6 +25,7 @@ void DasherController::editDelete(const std::string& strText, Dasher::CDasherNod
 	if(0 == Buffer.compare(Buffer.length() - strText.length(), strText.length(), strText))
 	{
 		Buffer.erase(Buffer.length() - strText.length(), strText.length());
+		OSOutputModule->deleteCharacter();
 	}
 	CDasherInterfaceBase::editDelete(strText, pNode);
 }
@@ -43,7 +47,6 @@ unsigned DasherController::ctrlDelete(bool bForwards, Dasher::CControlManager::E
 	}
 	if(!bForwards) Cursor--;
 	return Cursor;
-
 }
 
 std::string DasherController::GetContext(unsigned iStart, unsigned iLength)

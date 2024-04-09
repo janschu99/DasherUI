@@ -72,6 +72,8 @@ ADD_Executable(DasherUI
 	${PROJECT_SOURCE_DIR}/src/DasherUIScreen.h
 	${PROJECT_SOURCE_DIR}/src/SocketInput.cpp
 	${PROJECT_SOURCE_DIR}/src/SocketInput.h
+	${PROJECT_SOURCE_DIR}/src/OSOutput.cpp
+	${PROJECT_SOURCE_DIR}/src/OSOutput.h
 	${PROJECT_SOURCE_DIR}/src/main.cpp
 )
 target_include_directories(DasherUI PUBLIC ${CMAKE_CURRENT_LIST_DIR}/Thirdparty/)
