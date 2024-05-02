@@ -92,7 +92,7 @@ target_include_directories(DasherUI PRIVATE ${PROJECT_SOURCE_DIR}/Thirdparty/asi
 # Copy Data files
 file(GLOB RESOURCE_FILES
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/alphabets/alphabet*.xml
-  ${PROJECT_SOURCE_DIR}/DasherCore/Data/colours/colour*.xml
+  ${PROJECT_SOURCE_DIR}/DasherCore/Data/colors/color*.xml
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/control/control*.xml
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/training/training*.txt
 )
