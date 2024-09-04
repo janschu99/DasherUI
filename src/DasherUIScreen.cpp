@@ -3,7 +3,7 @@
 #include "MainWindow.h"
 #include "imgui/imgui_internal.h"
 
-DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordInput(0, _("Mouse Input"))
+DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordInput(_("Mouse Input"))
 {
 	Font = MainWindow::LoadFonts(50.0f);
 }
@@ -48,7 +48,7 @@ void DasherUIScreen::DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Da
 	{
 		const ImVec4 ImOutlineColor = { static_cast<float>(LineColor.Red) / 255.0f, static_cast<float>(LineColor.Green) / 255.0f, static_cast<float>(LineColor.Blue) / 255.0f, static_cast<float>(LineColor.Alpha) / 255.0f };
 
-		ImGui::GetWindowDrawList()->AddCircle(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor),0, static_cast<float>(iLineWidth));
+		ImGui::GetWindowDrawList()->AddCircle(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImOutlineColor),0, static_cast<float>(iLineWidth));
 	}
 }
 

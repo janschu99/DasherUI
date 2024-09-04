@@ -18,9 +18,7 @@ public:
 	void Polygon(point* Points, int Number, const Dasher::ColorPalette::Color& fillColour, const Dasher::ColorPalette::Color& outlineColour, int lineWidth) override;
 	void Display() override;
 	bool IsPointVisible(Dasher::screenint x, Dasher::screenint y) override;
-
-	bool MultiSizeFonts() override { return true; }
-	
+		
 	bool SetCanvasSize(ImVec2 CanvasPos, ImVec2 CanvasSize);
 
 	bool GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView) override;

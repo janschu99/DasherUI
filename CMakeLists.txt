@@ -60,7 +60,7 @@ add_subdirectory("Thirdparty/nativefiledialog-extended")
 
 IF (WIN32)
 	# Hide console window
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 ENDIF()
 
 ADD_Executable(DasherUI

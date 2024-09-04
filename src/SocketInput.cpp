@@ -6,11 +6,11 @@
 #include "DasherInterfaceBase.h"
 #include "DasherModel.h"
 
-SocketInput::SocketInput(CSettingsUser* Creator, Dasher::CDasherInterfaceBase* Controller, Dasher::CFrameRate* pFramerate): CScreenCoordInput(0, _("Socket Input")),
-                                                                                                                         CDefaultFilter(Creator, Controller, pFramerate, 2, "Socket Mode")
+SocketInput::SocketInput(Dasher::CSettingsStore* pSettingsStore, Dasher::CDasherInterfaceBase* Controller, Dasher::CFrameRate* pFramerate): CScreenCoordInput(_("Socket Input")),
+                                                                                                                                            CDefaultFilter(pSettingsStore, Controller, pFramerate, "Socket Mode")
 {
-    xLabel = GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_X_LABEL);
-    yLabel = GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_Y_LABEL);
+    xLabel = m_pSettingsStore->GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_X_LABEL);
+    yLabel = m_pSettingsStore->GetStringParameter(Dasher::Parameter::SP_SOCKET_INPUT_Y_LABEL);
 }
 
 SocketInput::~SocketInput()
@@ -35,7 +35,7 @@ bool SocketInput::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, 
 
 void SocketInput::startListen()
 {
-	session_acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), static_cast<short>(GetLongParameter(Dasher::LP_SOCKET_PORT))));
+	session_acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), static_cast<short>(m_pSettingsStore->GetLongParameter(Dasher::LP_SOCKET_PORT))));
 
 	receiveThread = std::thread([this](){
 
