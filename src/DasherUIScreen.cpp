@@ -110,7 +110,7 @@ bool DasherUIScreen::SetCanvasSize(const ImVec2 position, const ImVec2 size)
 bool DasherUIScreen::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView)
 {
 	const ImVec2 MousePos = ImGui::GetMousePos();
-	if (MousePos.x < 0 || MousePos.y < 0) return false;
+	if(!ImGui::IsMousePosValid(&MousePos)) return false;
 	iX = static_cast<Dasher::screenint>(MousePos.x - CanvasPos.x);
 	iY = static_cast<Dasher::screenint>(MousePos.y - CanvasPos.y);
 	return true;
